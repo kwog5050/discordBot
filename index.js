@@ -1,5 +1,6 @@
 const data = require("./data.js");
 require('dotenv').config();
+const keepAlive = require("./server.js");
 
 const { Client, Intents } = require('discord.js');
 const client = new Client({
@@ -21,16 +22,7 @@ client.on('message', message => {
 
     const content = message.content;
     const num = content.match(/\d+/g);
-    const regexArr = [
-        /.*사용법.*/,
-        /.*동방어구.*/,
-        /.*주무기.*/,
-        /.*각성무기.*/,
-        /.*채널추천.*/,
-        /.*강화.*/,
-        /.*공구간.*/,
-        /.*방구간.*/,
-    ];
+    const regexArr = [/.*사용법.*/, /.*동방어구.*/, /.*주무기.*/, /.*각성무기.*/, /.*채널추천.*/, /.*강화.*/, /.*공구간.*/, /.*방구간.*/, /.*보물.*/,];
 
     if (regexArr[0].test(content)) {
         message.channel.send(`
@@ -49,6 +41,9 @@ client.on('message', message => {
             \n =========================================
             \n 방구간 
             \n !방구간 240
+            \n =========================================
+            \n 보물 (론의 영성, 셰레칸의 선단, 잿빛 반달의 가크투낙, 마크타난의 독선,나크의 붉은 눈물, 발타라의 천안)
+            \n !보물 론의 영성
             \n =========================================
         `);
     } else if (regexArr[1].test(content)) {
@@ -104,9 +99,25 @@ client.on('message', message => {
         }
 
         message.channel.send(`가장 가까운 방구간은 ${final} 입니다.`);
+    } else if (regexArr[8].test(content)) {
+        message.channel.send("가모스 글로벌 한시간 기준");
+        if (content === "!보물 론의 영성") {
+            treasure(message, 0.026);
+        } else if (content === "!보물 셰레칸의 선단") {
+            treasure(message, 0.019);
+        } else if (content === "!보물 잿빛 반달의 가크투낙") {
+            treasure(message, 0.017);
+        } else if (content === "!보물 마크타난의 독선") {
+            treasure(message, 0.017);
+        } else if (content === "!보물 나크의 붉은 눈물") {
+            treasure(message, 0.01);
+        } else if (content === "!보물 발타라의 천안") {
+            message.channel.send("확률정보없음");
+        }
     }
 })
 
+// 카프라스 총합
 function accumulateCaphras(number, caphrasType) {
     let sum = 0;
     for (let i = 0; i < number; i++) {
@@ -115,5 +126,15 @@ function accumulateCaphras(number, caphrasType) {
     return sum;
 }
 
+// 보물작
+function treasure(message, percent) {
+    if (Math.random() < percent) {
+        message.channel.send("이걸 쳐 먹네..");
+    } else {
+        message.channel.send("뜨겠냐?ㅋㅋ");
+    }
+}
+
+keepAlive();
 // 봇과 서버를 연결해주는 부분
 client.login(process.env.TOKEN);
