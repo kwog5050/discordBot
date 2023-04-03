@@ -1,0 +1,15 @@
+{
+  "dependencies": {
+    "discord.js": "^12.5.3",
+    "dotenv": "^16.0.3"
+  },
+  "name": "bot",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "description": ""
+}
