@@ -51,22 +51,6 @@ client.on('message', message => {
             \n !방구간 240
             \n =========================================
         `);
-        // message.channel.send(`----------`);
-        // message.channel.send(`카프라스`);
-        // message.channel.send(`!동방어구 10, !주무기 10, !각성무기 10`);
-        // message.channel.send(`----------`);
-        // message.channel.send(`채널추천`);
-        // message.channel.send(`!채널추천`);
-        // message.channel.send(`----------`);
-        // message.channel.send(`강화`);
-        // message.channel.send(`!강화확률`);
-        // message.channel.send(`----------`);
-        // message.channel.send(`공구간`);
-        // message.channel.send(`!공구간 240`);
-        // message.channel.send(`----------`);
-        // message.channel.send(`방구간`);
-        // message.channel.send(`!방구간 240`);
-        // message.channel.send(`----------`);
     } else if (regexArr[1].test(content)) {
         message.channel.send(`
             동방어구 카프라스 ${num - 1}에서 ${num}까지 필요수량 ${data.defensive[num - 1]}개 누적 카프라스 ${accumulateCaphras(num[0], data.defensive)}개 우둔은 알빠노
