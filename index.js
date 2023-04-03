@@ -42,8 +42,8 @@ client.on('message', message => {
             \n 방구간 
             \n !방구간 240
             \n =========================================
-            \n 보물 (론의 영성, 셰레칸의 선단, 잿빛 반달의 가크투낙, 마크타난의 독선,나크의 붉은 눈물, 발타라의 천안)
-            \n !보물 론의 영성
+            \n 보물 (영성, 선단, 크투낙, 독선,눈물, 천안)
+            \n !보물 영성
             \n =========================================
         `);
     } else if (regexArr[1].test(content)) {
@@ -101,18 +101,21 @@ client.on('message', message => {
         message.channel.send(`가장 가까운 방구간은 ${final} 입니다.`);
     } else if (regexArr[8].test(content)) {
         message.channel.send("가모스 글로벌 한시간 기준");
-        if (content === "!보물 론의 영성") {
+
+        if (content === "!보물 영성") {
             treasure(message, 0.026);
-        } else if (content === "!보물 셰레칸의 선단") {
+        } else if (content === "!보물 선단") {
             treasure(message, 0.019);
-        } else if (content === "!보물 잿빛 반달의 가크투낙") {
+        } else if (content === "!보물 가크투낙") {
             treasure(message, 0.017);
-        } else if (content === "!보물 마크타난의 독선") {
+        } else if (content === "!보물 독선") {
             treasure(message, 0.017);
-        } else if (content === "!보물 나크의 붉은 눈물") {
+        } else if (content === "!보물 눈물") {
             treasure(message, 0.01);
-        } else if (content === "!보물 발타라의 천안") {
+        } else if (content === "!보물 천안") {
             message.channel.send("확률정보없음");
+        } else {
+            message.channel.send("제대로 입력하셈;;");
         }
     }
 })
@@ -129,9 +132,13 @@ function accumulateCaphras(number, caphrasType) {
 // 보물작
 function treasure(message, percent) {
     if (Math.random() < percent) {
-        message.channel.send("이걸 쳐 먹네..");
+        message.channel.send(`${message.author.username}님 이걸 쳐 먹네..`);
     } else {
-        message.channel.send("뜨겠냐?ㅋㅋ");
+        if (message.author.username === "신민기") {
+            message.channel.send(`민기야 안뜬다고!!!! 돌아가!!!!ㅋㅋㅋ`);
+        } else {
+            message.channel.send(`${message.author.username}님 뜨겠냐고?ㅋㅋ`);
+        }
     }
 }
 
