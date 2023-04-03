@@ -25,6 +25,7 @@ client.on('message', message => {
     const regexArr = [/.*사용법.*/, /.*동방어구.*/, /.*주무기.*/, /.*각성무기.*/, /.*채널추천.*/, /.*강화.*/, /.*공구간.*/, /.*방구간.*/, /.*보물.*/,];
 
     if (regexArr[0].test(content)) {
+
         message.channel.send(`
             \n =========================================
             \n 카프라스 
@@ -34,7 +35,7 @@ client.on('message', message => {
             \n !채널추천 
             \n =========================================
             \n 강화 
-            \n !강화확률 30% 
+            \n !강화확률 30% or !강화확률 30 
             \n =========================================
             \n 공구간 
             \n !공구간 240 
@@ -46,30 +47,65 @@ client.on('message', message => {
             \n !보물 영성
             \n =========================================
         `);
+
     } else if (regexArr[1].test(content)) {
+
+        if (num === null || num === undefined || num - 1 < 0) {
+            message.channel.send("하..빡통쉑 제대로 쳐라");
+            return;
+        }
+
         message.channel.send(`
             동방어구 카프라스 ${num - 1}에서 ${num}까지 필요수량 ${data.defensive[num - 1]}개 누적 카프라스 ${accumulateCaphras(num[0], data.defensive)}개 우둔은 알빠노
         `);
+
     } else if (regexArr[2].test(content)) {
+
+        if (num === null || num === undefined || num - 1 < 0) {
+            message.channel.send("하..빡통쉑 제대로 쳐라");
+            return;
+        }
+
         message.channel.send(`
             주무기 카프라스 ${num - 1}에서 ${num}까지 필요수량 ${data.mainWeapon[num - 1]}개 누적 카프라스 ${accumulateCaphras(num[0], data.mainWeapon)}개 
         `);
+
     } else if (regexArr[3].test(content)) {
+
+        if (num === null || num === undefined || num - 1 < 0) {
+            message.channel.send("하..빡통쉑 제대로 쳐라");
+            return;
+        }
+
         message.channel.send(`
             각성무기 카프라스 ${num - 1}에서 ${num}까지 필요수량 ${data.arousalWeapon[num - 1]}개 누적 카프라스 ${accumulateCaphras(num[0], data.arousalWeapon)}개 
         `);
+
     } else if (regexArr[4].test(content)) {
+
         const min = 0;
         const max = data.channels.length - 1;
 
         message.channel.send(`오늘의 채널은 ${data.channels[Math.floor(Math.random() * (max - min + 1)) + min]} 입니다.`);
+
     } else if (regexArr[5].test(content)) {
+
+        if (num * 0.01 > 1) {
+            message.channel.send("아잇 싯팔 꼴받게 하지말라고");
+            return;
+        } else if (/-\w+/g.test(content)) {
+            message.channel.send("마이너스 넣지말라고");
+            return;
+        }
+
         if (Math.random() < num * 0.01) {
             message.channel.send("기린쉑 이걸 성공하누");
         } else {
             message.channel.send("실패~~~~~~~~~~~~~~!");
         }
+
     } else if (regexArr[6].test(content)) {
+
         let final = Infinity;
 
         for (let i = 0; i < data.power.length; i++) {
@@ -84,7 +120,9 @@ client.on('message', message => {
         }
 
         message.channel.send(`가장 가까운 공구간은 ${final} 입니다.`);
+
     } else if (regexArr[7].test(content)) {
+
         let final = Infinity;
 
         for (let i = 0; i < data.defense.length; i++) {
@@ -99,24 +137,39 @@ client.on('message', message => {
         }
 
         message.channel.send(`가장 가까운 방구간은 ${final} 입니다.`);
+
     } else if (regexArr[8].test(content)) {
-        message.channel.send("가모스 글로벌 한시간 기준");
 
         if (content === "!보물 영성") {
+            message.channel.send("가모스 글로벌 한시간 기준");
             treasure(message, 0.026);
         } else if (content === "!보물 선단") {
+            message.channel.send("가모스 글로벌 한시간 기준");
             treasure(message, 0.019);
         } else if (content === "!보물 가크투낙") {
+            message.channel.send("가모스 글로벌 한시간 기준");
             treasure(message, 0.017);
         } else if (content === "!보물 독선") {
+            message.channel.send("가모스 글로벌 한시간 기준");
             treasure(message, 0.017);
         } else if (content === "!보물 눈물") {
+            message.channel.send("가모스 글로벌 한시간 기준");
             treasure(message, 0.01);
         } else if (content === "!보물 천안") {
+            message.channel.send("가모스 글로벌 한시간 기준");
             message.channel.send("확률정보없음");
         } else {
             message.channel.send("제대로 입력하셈;;");
         }
+
+    } else {
+
+        if (message.author.username === "신익수") {
+            message.channel.send("빡통익수 그만해!!!!! 그만해!!!!! 그만해!!!!! 그만해!!!!! 그만해!!!!! 그만해!!!!! 그만해!!!!! 그만해!!!!! 그만해!!!!!");
+        } else {
+            message.channel.send("사용법보고 다시 입력해주세요.");
+        }
+
     }
 })
 
@@ -137,7 +190,7 @@ function treasure(message, percent) {
         if (message.author.username === "신민기") {
             message.channel.send(`민기야 안뜬다고!!!! 돌아가!!!!ㅋㅋㅋ`);
         } else {
-            message.channel.send(`${message.author.username}님 뜨겠냐고?ㅋㅋ`);
+            message.channel.send(`${message.author.username}님 뜨겠냐고ㅋㅋ`);
         }
     }
 }
