@@ -1,6 +1,6 @@
 const data = require("./data.js");
 require('dotenv').config();
-const keepAlive = require("./server.js");
+// const keepAlive = require("./server.js");
 
 const { Client, Intents } = require('discord.js');
 const client = new Client({
@@ -21,7 +21,7 @@ client.on('message', message => {
     if (!message.content.startsWith(prefix)) return;
 
     const content = message.content;
-    const num = content.match(/\d+/g);
+    const num = content.match(/\b\d+(\.\d+)?\b/g);
     const regexArr = [/.*사용법.*/, /.*동방어구.*/, /.*주무기.*/, /.*각성무기.*/, /.*채널추천.*/, /.*강화.*/, /.*공구간.*/, /.*방구간.*/, /.*보물.*/,];
 
     if (regexArr[0].test(content)) {
@@ -98,11 +98,19 @@ client.on('message', message => {
             return;
         }
 
-        if (Math.random() < num * 0.01) {
-            message.channel.send("기린쉑 이걸 성공하누");
-        } else {
-            message.channel.send("실패~~~~~~~~~~~~~~!");
-        }
+        let interval = setInterval(() => {
+            message.channel.send(".");
+        }, 1000);
+
+        setTimeout(() => {
+            clearInterval(interval);
+
+            if (Math.random() < num * 0.01) {
+                message.channel.send("기린쉑 이걸 성공하누");
+            } else {
+                message.channel.send("실패~~~~~~~~~~~~~~!");
+            }
+        }, 5000);
 
     } else if (regexArr[6].test(content)) {
 
@@ -195,6 +203,6 @@ function treasure(message, percent) {
     }
 }
 
-keepAlive();
+// keepAlive();
 // 봇과 서버를 연결해주는 부분
 client.login(process.env.TOKEN);
