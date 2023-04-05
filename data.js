@@ -13,4 +13,166 @@ const power = [100, 140, 170, 184, 209, 235, 245, 249, 253, 257, 261, 265, 269, 
 //방구간
 const defense = [203, 211, 218, 226, 233, 241, 248, 256, 263, 271, 278, 286, 293, 301, 308, 315, 322, 329, 335, 341, 347, 353, 359, 365, 371, 377, 383, 389, 395, 401];
 
-module.exports = { defensive, mainWeapon, arousalWeapon, channels, power, defense };
+//보스
+const boss = {
+    sun: [
+        {
+            time: "00 : 15",
+            bossName: "가모스"
+        },
+        {
+            time: "02 : 00",
+            bossName: "카란다 / 쿠툼"
+        },
+        {
+            time: "11 : 00",
+            bossName: "크자카 / 누베르"
+        },
+        {
+            time: "16 : 00",
+            bossName: "카란다 / 쿠툼"
+        },
+        {
+            time: "17 : 00",
+            bossName: "벨"
+        },
+        {
+            time: "20 : 00",
+            bossName: "누베르 / 쿠툼"
+        },
+        {
+            time: "23 : 45",
+            bossName: "카란다"
+        },
+    ],
+    mon: [
+        {
+            time: "02 : 00",
+            bossName: "크자카"
+        },
+        {
+            time: "11 : 00",
+            bossName: "크자카 / 누베르"
+        },
+        {
+            time: "16 : 00",
+            bossName: "크자카 / 쿠툼"
+        },
+        {
+            time: "20 : 00",
+            bossName: "카란다 / 누베르"
+        },
+        {
+            time: "23 : 45",
+            bossName: "오핀"
+        },
+    ],
+    tue: [
+        {
+            time: "02 : 00",
+            bossName: "크자카"
+        },
+        {
+            time: "11 : 00",
+            bossName: "크자카 / 쿠툼"
+        },
+        {
+            time: "16 : 00",
+            bossName: "크자카 / 누베르"
+        },
+        {
+            time: "20 : 00",
+            bossName: "카란다 / 쿠툼"
+        },
+        {
+            time: "23 : 45",
+            bossName: "가모스"
+        },
+    ],
+    wed: [
+        {
+            time: "02 : 00",
+            bossName: "누베르 / 오핀"
+        },
+        {
+            time: "16 : 00",
+            bossName: "크자카 / 누베르"
+        },
+        {
+            time: "20 : 00",
+            bossName: "카란다 / 크자카"
+        },
+        {
+            time: "23 : 15",
+            bossName: "귄트 / 무라카"
+        },
+    ],
+    thu: [
+        {
+            time: "00 : 15",
+            bossName: "벨"
+        },
+        {
+            time: "02 : 00",
+            bossName: "쿠툼"
+        },
+        {
+            time: "11 : 00",
+            bossName: "크자카 / 누베르"
+        },
+        {
+            time: "16 : 00",
+            bossName: "카란다 / 쿠툼"
+        },
+        {
+            time: "20 : 00",
+            bossName: "누베르 / 쿠툼"
+        },
+        {
+            time: "23 : 45",
+            bossName: "가모스"
+        },
+    ],
+    fri: [
+        {
+            time: "02 : 00",
+            bossName: "카란다"
+        },
+        {
+            time: "11 : 00",
+            bossName: "크자카 / 쿠툼"
+        },
+        {
+            time: "16 : 00",
+            bossName: "카란다 / 누베르"
+        },
+        {
+            time: "20 : 00",
+            bossName: "크자카 / 쿠툼"
+        },
+        {
+            time: "23 : 45",
+            bossName: "오핀"
+        },
+    ],
+    sat: [
+        {
+            time: "02 : 00",
+            bossName: "카란다 / 누베르"
+        },
+        {
+            time: "11 : 00",
+            bossName: "누베르 / 쿠툼"
+        },
+        {
+            time: "16 : 00",
+            bossName: "카란다 / 크자카"
+        },
+        {
+            time: "19 : 00",
+            bossName: "귄트 / 무라카"
+        },
+    ]
+}
+
+module.exports = { defensive, mainWeapon, arousalWeapon, channels, power, defense, boss };

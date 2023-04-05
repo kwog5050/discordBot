@@ -22,7 +22,7 @@ client.on('message', message => {
 
     const content = message.content;
     const num = content.match(/\b\d+(\.\d+)?\b/g);
-    const regexArr = [/.*사용법.*/, /.*동방어구.*/, /.*주무기.*/, /.*각성무기.*/, /.*채널추천.*/, /.*강화.*/, /.*공구간.*/, /.*방구간.*/, /.*보물.*/,];
+    const regexArr = [/.*사용법.*/, /.*동방어구.*/, /.*주무기.*/, /.*각성무기.*/, /.*채널추천.*/, /.*강화.*/, /.*공구간.*/, /.*방구간.*/, /.*보물.*/, /.*보스.*/];
 
     if (regexArr[0].test(content)) {
 
@@ -45,6 +45,9 @@ client.on('message', message => {
             \n =========================================
             \n 보물 (영성, 선단, 크투낙, 독선,눈물, 천안)
             \n !보물 영성
+            \n =========================================
+            \n 보스 시간 
+            \n !보스
             \n =========================================
         `);
 
@@ -169,6 +172,37 @@ client.on('message', message => {
         } else {
             message.channel.send("제대로 입력하셈;;");
         }
+
+    } else if (regexArr[9].test(content)) {
+
+        const date = new Date();
+        const currentDay = date.getDay();
+        const currentHour = date.getHours();
+        const currentMinute = date.getMinutes();
+
+        let closestBoss = null;
+        let minDiff = Number.MAX_SAFE_INTEGER;
+
+        for (const day in data.boss) {
+            const bosses = data.boss[day];
+            for (const bossInfo of bosses) {
+                const [bossHour, bossMinute] = bossInfo.time.split(" : ").map(Number);
+                if (currentDay === getDay(day) && (currentHour < bossHour || (currentHour === bossHour && currentMinute < bossMinute))) {
+                    const diff = (bossHour - currentHour) * 60 + (bossMinute - currentMinute);
+                    if (diff < minDiff) {
+                        minDiff = diff;
+                        closestBoss = bossInfo;
+                    }
+                }
+            }
+        }
+
+        function getDay(day) {
+            const days = ["sun", "mon", "tue", "wed", "thu", "fri", "sat"];
+            return days.indexOf(day);
+        }
+
+        message.channel.send(`현재 가장 가까운 보스는 ${closestBoss.time} 시간에 출현 하는 ${closestBoss.bossName}입니다.`);
 
     } else {
 
