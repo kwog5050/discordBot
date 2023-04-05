@@ -175,34 +175,40 @@ client.on('message', message => {
 
     } else if (regexArr[9].test(content)) {
 
-        const date = new Date();
-        const currentDay = date.getDay();
-        const currentHour = date.getHours();
-        const currentMinute = date.getMinutes();
+        const kstTime = getKST();
+        const currentDay = kstTime.getDay();
+        const currentHour = kstTime.getHours();
+        const currentMinute = kstTime.getMinutes();
 
-        let closestBoss = null;
         let minDiff = Number.MAX_SAFE_INTEGER;
 
-        for (const day in data.boss) {
-            const bosses = data.boss[day];
-            for (const bossInfo of bosses) {
-                const [bossHour, bossMinute] = bossInfo.time.split(" : ").map(Number);
-                if (currentDay === getDay(day) && (currentHour < bossHour || (currentHour === bossHour && currentMinute < bossMinute))) {
-                    const diff = (bossHour - currentHour) * 60 + (bossMinute - currentMinute);
-                    if (diff < minDiff) {
-                        minDiff = diff;
-                        closestBoss = bossInfo;
+        if (content === "!보스") {
+            for (const day in data.boss) {
+                const bosses = data.boss[day];
+                for (const bossInfo of bosses) {
+                    const [bossHour, bossMinute] = bossInfo.time.split(" : ").map(Number);
+                    if (currentDay === getDay(day) && (currentHour < bossHour || (currentHour === bossHour && currentMinute < bossMinute))) {
+                        const diff = (bossHour - currentHour) * 60 + (bossMinute - currentMinute);
+                        if (diff < minDiff) {
+                            minDiff = diff;
+                            message.channel.send(`현재 가장 가까운 보스는 ${bossInfo.time} 시간에 출현 하는 ${bossInfo.bossName}입니다.`);
+                        }
+                    }
+                }
+            }
+        } else if (content === "!보스 시간표") {
+            message.channel.send(`오늘 보스 시간표입니다.`);
+            for (const day in data.boss) {
+                const bosses = data.boss[day];
+                if (currentDay === getDay(day)) {
+                    for (const bossInfo of bosses) {
+                        message.channel.send(`
+                            \n ${bossInfo.time}에 ${bossInfo.bossName}
+                        `);
                     }
                 }
             }
         }
-
-        function getDay(day) {
-            const days = ["sun", "mon", "tue", "wed", "thu", "fri", "sat"];
-            return days.indexOf(day);
-        }
-
-        message.channel.send(`현재 가장 가까운 보스는 ${closestBoss.time} 시간에 출현 하는 ${closestBoss.bossName}입니다.`);
 
     } else {
 
@@ -235,6 +241,22 @@ function treasure(message, percent) {
             message.channel.send(`${message.author.username}님 뜨겠냐고ㅋㅋ`);
         }
     }
+}
+
+// 요일 구하기
+function getDay(day) {
+    const days = ["sun", "mon", "tue", "wed", "thu", "fri", "sat"];
+    return days.indexOf(day);
+}
+
+// 한국 표준시 구하기
+function getKST() {
+    const currentTime = new Date();
+    const timezoneOffset = currentTime.getTimezoneOffset() / 60;
+    const kstTimezoneOffset = 9;
+    const kstOffset = kstTimezoneOffset + timezoneOffset;
+    currentTime.setHours(currentTime.getHours() + kstOffset);
+    return currentTime;
 }
 
 // keepAlive();
