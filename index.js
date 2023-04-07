@@ -45,6 +45,8 @@ client.on('message', message => {
             \n =========================================
             \n 보물 (영성, 선단, 크투낙, 독선,눈물, 천안)
             \n !보물 영성
+            \n 보물 재료 잡템 1개당 먹는 갯수
+            \n !보물 재료 영성 3000개
             \n =========================================
             \n 보스 시간표
             \n !보스 시간표
@@ -152,27 +154,65 @@ client.on('message', message => {
         message.channel.send(`가장 가까운 방구간은 ${final} 입니다.`);
 
     } else if (regexArr[8].test(content)) {
+        const treasureRegex = [/.*영성.*/, /.*선단.*/, /.*가크투낙.*/, /.*독선.*/, /.*눈물.*/, /.*천안.*/];
 
-        if (content === "!보물 영성") {
-            message.channel.send("가모스 글로벌 한시간 기준");
-            treasure(message, 0.026);
-        } else if (content === "!보물 선단") {
-            message.channel.send("가모스 글로벌 한시간 기준");
-            treasure(message, 0.019);
-        } else if (content === "!보물 가크투낙") {
-            message.channel.send("가모스 글로벌 한시간 기준");
-            treasure(message, 0.017);
-        } else if (content === "!보물 독선") {
-            message.channel.send("가모스 글로벌 한시간 기준");
-            treasure(message, 0.017);
-        } else if (content === "!보물 눈물") {
-            message.channel.send("가모스 글로벌 한시간 기준");
-            treasure(message, 0.01);
-        } else if (content === "!보물 천안") {
-            message.channel.send("가모스 글로벌 한시간 기준");
-            message.channel.send("확률정보없음");
+        if (/.*재료.*/.test(content)) {
+            if (treasureRegex[0].test(content)) {
+                treasureMaterial(num, message, 0.00020228582987761708);
+            } else if (treasureRegex[1].test(content)) {
+                treasureMaterial(num, message, 0.000156335495974361);
+            } else if (treasureRegex[2].test(content)) {
+                treasureMaterial(num, message, 0.00029439472444653793);
+            } else if (treasureRegex[3].test(content)) {
+                treasureMaterial(num, message, 0.0002646252717134486);
+            } else if (treasureRegex[4].test(content)) {
+                treasureMaterial(num, message, 0.0002581926514399206);
+            } else if (treasureRegex[5].test(content)) {
+                message.channel.send("확률정보없음");
+            }
+            return;
+        }
+
+        if (num === null || num === undefined || num - 1 < 0) {
+            if (treasureRegex[0].test(content)) {
+                message.channel.send("가모스 글로벌 한시간 기준");
+                treasure(message, 0.026);
+            } else if (treasureRegex[1].test(content)) {
+                message.channel.send("가모스 글로벌 한시간 기준");
+                treasure(message, 0.019);
+            } else if (treasureRegex[2].test(content)) {
+                message.channel.send("가모스 글로벌 한시간 기준");
+                treasure(message, 0.017);
+            } else if (treasureRegex[3].test(content)) {
+                message.channel.send("가모스 글로벌 한시간 기준");
+                treasure(message, 0.017);
+            } else if (treasureRegex[4].test(content)) {
+                message.channel.send("가모스 글로벌 한시간 기준");
+                treasure(message, 0.01);
+            } else if (treasureRegex[5].test(content)) {
+                message.channel.send("가모스 글로벌 한시간 기준");
+                message.channel.send("확률정보없음");
+            } else {
+                message.channel.send("제대로 입력하셈;;");
+            }
+            return;
         } else {
-            message.channel.send("제대로 입력하셈;;");
+            if (treasureRegex[0].test(content)) {
+                several(num, message, 0.026, "보물");
+            } else if (treasureRegex[1].test(content)) {
+                several(num, message, 0.019, "보물");
+            } else if (treasureRegex[2].test(content)) {
+                several(num, message, 0.017, "보물");
+            } else if (treasureRegex[3].test(content)) {
+                several(num, message, 0.017, "보물");
+            } else if (treasureRegex[4].test(content)) {
+                several(num, message, 0.01, "보물");
+            } else if (treasureRegex[5].test(content)) {
+                message.channel.send("확률정보없음");
+            } else {
+                message.channel.send("제대로 입력하셈;;");
+            }
+            return;
         }
 
     } else if (regexArr[9].test(content)) {
@@ -225,15 +265,20 @@ client.on('message', message => {
 
 // 카프라스 총합
 function accumulateCaphras(number, caphrasType) {
+
     let sum = 0;
+
     for (let i = 0; i < number; i++) {
         sum += caphrasType[i];
     }
+
     return sum;
+
 }
 
 // 보물작
 function treasure(message, percent) {
+
     if (Math.random() < percent) {
         message.channel.send(`${message.author.username}님 이걸 쳐 먹네..`);
     } else {
@@ -243,6 +288,45 @@ function treasure(message, percent) {
             message.channel.send(`${message.author.username}님 뜨겠냐고ㅋㅋ`);
         }
     }
+
+}
+
+// 보물 재료
+function treasureMaterial(n, message, percent) {
+
+    let sum = 0;
+
+    for (let i = 0; i < n; i++) {
+        if (Math.random() <= percent) { // 0.5%의 확률로 성공
+            sum++;
+        }
+    }
+
+    message.channel.send(`잡템 ${n}개 먹을때 동안 보물 재료 ${sum}개 드셨습니다.`);
+
+}
+
+//n 번 돌려서 성공 실패 확인
+function several(n, message, percent, name) {
+
+    let sum = 0;
+
+    while (Math.random() >= percent) {
+        sum++;
+        if (sum >= n) {
+            message.channel.send(`ㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋ님 못먹음`);
+            return;
+        }
+    }
+
+    if (name === "보물") {
+        message.channel.send(`${sum}번째만에 드셨네요;;`);
+    } else if (name === "강화") {
+        message.channel.send(`${sum}번째만 성공하셨네요;;`);
+    } else {
+        message.channel.send("이상한짓 하지말라고 ㅅㅂ놈아");
+    }
+
 }
 
 // 요일 구하기
