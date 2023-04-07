@@ -45,7 +45,7 @@ client.on('message', message => {
             \n =========================================
             \n 보물 (영성, 선단, 크투낙, 독선,눈물, 천안)
             \n !보물 영성
-            \n 보물 재료 잡템 1개당 먹는 갯수
+            \n 보물 정가 재료 잡템 1개당 먹는 갯수
             \n !보물 재료 영성 3000개
             \n =========================================
             \n 보스 시간표
@@ -297,7 +297,7 @@ function treasureMaterial(n, message, percent) {
     let sum = 0;
 
     for (let i = 0; i < n; i++) {
-        if (Math.random() <= percent) { // 0.5%의 확률로 성공
+        if (Math.random() <= percent) {
             sum++;
         }
     }
