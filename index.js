@@ -35,7 +35,9 @@ client.on('message', message => {
             \n !채널추천 
             \n =========================================
             \n 강화 
-            \n !강화확률 30% or !강화확률 30 
+            \n !강화확률 n% or !강화확률 n 
+            \n 강화 여러번 밑에 따라 똑같이 안치면 위에꺼 한번만 실행함 !!
+            \n !강화확률 n% n번
             \n =========================================
             \n 공구간 
             \n !공구간 240 
@@ -43,7 +45,7 @@ client.on('message', message => {
             \n 방구간 
             \n !방구간 240
             \n =========================================
-            \n 보물 (영성, 선단, 크투낙, 독선,눈물, 천안)
+            \n 보물 (영성, 선단, 가크투낙, 독선,눈물, 천안)
             \n !보물 영성
             \n 보물 정가 재료 잡템 1개당 먹는 갯수
             \n !보물 재료 영성 3000개
@@ -96,6 +98,7 @@ client.on('message', message => {
         message.channel.send(`오늘의 채널은 ${data.channels[Math.floor(Math.random() * (max - min + 1)) + min]} 입니다.`);
 
     } else if (regexArr[5].test(content)) {
+        const regex = /^![가-힣]+\s+(\d+(\.\d+)?%)\s+(\d+)번$/;
 
         if (num * 0.01 > 1) {
             message.channel.send("아잇 싯팔 꼴받게 하지말라고");
@@ -105,19 +108,29 @@ client.on('message', message => {
             return;
         }
 
-        let interval = setInterval(() => {
-            message.channel.send(".");
-        }, 1000);
+        if (regex.test(content)) {
 
-        setTimeout(() => {
-            clearInterval(interval);
+            const exec = regex.exec(content);
 
-            if (Math.random() < num * 0.01) {
-                message.channel.send("기린쉑 이걸 성공하누");
-            } else {
-                message.channel.send("실패~~~~~~~~~~~~~~!");
-            }
-        }, 5000);
+            several(parseFloat(exec[3]), message, parseFloat(exec[1]) * 0.01, "강화");
+
+        } else {
+
+            let interval = setInterval(() => {
+                message.channel.send(".");
+            }, 1000);
+
+            setTimeout(() => {
+                clearInterval(interval);
+
+                if (Math.random() < num * 0.01) {
+                    message.channel.send("기린쉑 이걸 성공하누");
+                } else {
+                    message.channel.send("실패~~~~~~~~~~~~~~!");
+                }
+            }, 5000);
+
+        }
 
     } else if (regexArr[6].test(content)) {
 
@@ -157,18 +170,22 @@ client.on('message', message => {
         const treasureRegex = [/.*영성.*/, /.*선단.*/, /.*가크투낙.*/, /.*독선.*/, /.*눈물.*/, /.*천안.*/];
 
         if (/.*재료.*/.test(content)) {
-            if (treasureRegex[0].test(content)) {
-                treasureMaterial(num, message, 0.00020228582987761708);
-            } else if (treasureRegex[1].test(content)) {
-                treasureMaterial(num, message, 0.000156335495974361);
-            } else if (treasureRegex[2].test(content)) {
-                treasureMaterial(num, message, 0.00029439472444653793);
-            } else if (treasureRegex[3].test(content)) {
-                treasureMaterial(num, message, 0.0002646252717134486);
-            } else if (treasureRegex[4].test(content)) {
-                treasureMaterial(num, message, 0.0002581926514399206);
-            } else if (treasureRegex[5].test(content)) {
-                message.channel.send("확률정보없음");
+            if (num === null || num === undefined || num - 1 < 0) {
+                message.channel.send("야발련아 똑바로 입력해!!!!");
+            } else {
+                if (treasureRegex[0].test(content)) {
+                    treasureMaterial(num, message, 0.00020228582987761708);
+                } else if (treasureRegex[1].test(content)) {
+                    treasureMaterial(num, message, 0.000156335495974361);
+                } else if (treasureRegex[2].test(content)) {
+                    treasureMaterial(num, message, 0.00029439472444653793);
+                } else if (treasureRegex[3].test(content)) {
+                    treasureMaterial(num, message, 0.0002646252717134486);
+                } else if (treasureRegex[4].test(content)) {
+                    treasureMaterial(num, message, 0.0002581926514399206);
+                } else if (treasureRegex[5].test(content)) {
+                    message.channel.send("확률정보없음");
+                }
             }
             return;
         }
@@ -309,12 +326,14 @@ function treasureMaterial(n, message, percent) {
 //n 번 돌려서 성공 실패 확인
 function several(n, message, percent, name) {
 
-    let sum = 0;
+    let sum = name === "강화" ? 1 : 0;
 
     while (Math.random() >= percent) {
         sum++;
         if (sum >= n) {
-            message.channel.send(`ㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋ님 못먹음`);
+            name === "강화"
+                ? message.channel.send(`님 이것도 성공못함? 허접~ 허접~ ㅋㅋㅋㅋㅋ`)
+                : message.channel.send(`ㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋ님 못먹음`)
             return;
         }
     }
