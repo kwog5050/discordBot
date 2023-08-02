@@ -1,6 +1,6 @@
 const data = require("./data.js");
 require('dotenv').config();
-// const keepAlive = require("./server.js");
+const keepAlive = require("./server.js");
 
 const { Client, Intents } = require('discord.js');
 const client = new Client({
@@ -19,6 +19,11 @@ client.once("ready", () => {
 client.on('message', message => {
     if (message.author.bot) return;
     if (!message.content.startsWith(prefix)) return;
+
+    if (message.channel.name !== "검은사막") {
+        message.channel.send("야발련아 여기서 나 부르지 말라고;;");
+        return;
+    }
 
     const content = message.content;
     const num = content.match(/\b\d+(\.\d+)?\b/g);
@@ -270,13 +275,7 @@ client.on('message', message => {
         }
 
     } else {
-
-        if (message.author.username === "신익수") {
-            message.channel.send("빡통익수 그만해!!!!! 그만해!!!!! 그만해!!!!! 그만해!!!!! 그만해!!!!! 그만해!!!!! 그만해!!!!! 그만해!!!!! 그만해!!!!!");
-        } else {
-            message.channel.send("사용법보고 다시 입력해주세요.");
-        }
-
+        message.channel.send("사용법보고 다시 입력해주세요.");
     }
 })
 
@@ -297,13 +296,9 @@ function accumulateCaphras(number, caphrasType) {
 function treasure(message, percent) {
 
     if (Math.random() < percent) {
-        message.channel.send(`${message.author.username}님 이걸 쳐 먹네..`);
+        message.channel.send(`${message.author.username}님 축하드립니다 드셨군요..`);
     } else {
-        if (message.author.username === "신민기") {
-            message.channel.send(`민기야 안뜬다고!!!! 돌아가!!!!ㅋㅋㅋ`);
-        } else {
-            message.channel.send(`${message.author.username}님 뜨겠냐고ㅋㅋ`);
-        }
+        message.channel.send(`${message.author.username}님 안타깝게도 못 드셨습니다.`);
     }
 
 }
@@ -332,8 +327,8 @@ function several(n, message, percent, name) {
         sum++;
         if (sum >= n) {
             name === "강화"
-                ? message.channel.send(`님 이것도 성공못함? 허접~ 허접~ ㅋㅋㅋㅋㅋ`)
-                : message.channel.send(`ㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋ님 못먹음`)
+                ? message.channel.send(`실패!!`)
+                : message.channel.send(`드랍 실패!!`)
             return;
         }
     }
@@ -343,7 +338,7 @@ function several(n, message, percent, name) {
     } else if (name === "강화") {
         message.channel.send(`${sum}번째만 성공하셨네요;;`);
     } else {
-        message.channel.send("이상한짓 하지말라고 ㅅㅂ놈아");
+        message.channel.send("사용법을 다시 확인해주세요");
     }
 
 }
@@ -364,6 +359,6 @@ function getKST() {
     return currentTime;
 }
 
-// keepAlive();
+keepAlive();
 // 봇과 서버를 연결해주는 부분
 client.login(process.env.TOKEN);
