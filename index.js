@@ -1,8 +1,10 @@
 const data = require("./data.js");
 require('dotenv').config();
-const keepAlive = require("./server.js");
+// const keepAlive = require("./server.js");
 
 const { Client, Intents } = require('discord.js');
+const { default: axios } = require("axios");
+const cheerio = require("cheerio");
 const client = new Client({
     intents: [
         Intents.FLAGS.GUILDS,
@@ -16,18 +18,18 @@ client.once("ready", () => {
     console.log("Ready!");
 });
 
-client.on('message', message => {
+client.on('message', async message => {
     if (message.author.bot) return;
     if (!message.content.startsWith(prefix)) return;
 
-    if (message.channel.name !== "검은사막") {
-        message.channel.send("야발련아 여기서 나 부르지 말라고;;");
-        return;
-    }
+    // if (message.channel.name !== "검은사막") {
+    //     message.channel.send("여기서 부르지 마세요");
+    //     return;
+    // }
 
     const content = message.content;
     const num = content.match(/\b\d+(\.\d+)?\b/g);
-    const regexArr = [/.*사용법.*/, /.*동방어구.*/, /.*주무기.*/, /.*각성무기.*/, /.*채널추천.*/, /.*강화.*/, /.*공구간.*/, /.*방구간.*/, /.*보물.*/, /.*보스.*/];
+    const regexArr = [/.*사용법.*/, /.*동방어구.*/, /.*주무기.*/, /.*각성무기.*/, /.*채널추천.*/, /.*강화.*/, /.*공구간.*/, /.*방구간.*/, /.*보물.*/, /.*보스.*/, /.*쿠폰.*/];
 
     if (regexArr[0].test(content)) {
 
@@ -65,7 +67,7 @@ client.on('message', message => {
     } else if (regexArr[1].test(content)) {
 
         if (num === null || num === undefined || num - 1 < 0) {
-            message.channel.send("하..빡통쉑 제대로 쳐라");
+            message.channel.send("제대로 입력 부탁드립니다.");
             return;
         }
 
@@ -76,7 +78,7 @@ client.on('message', message => {
     } else if (regexArr[2].test(content)) {
 
         if (num === null || num === undefined || num - 1 < 0) {
-            message.channel.send("하..빡통쉑 제대로 쳐라");
+            message.channel.send("제대로 입력 부탁드립니다.");
             return;
         }
 
@@ -87,7 +89,7 @@ client.on('message', message => {
     } else if (regexArr[3].test(content)) {
 
         if (num === null || num === undefined || num - 1 < 0) {
-            message.channel.send("하..빡통쉑 제대로 쳐라");
+            message.channel.send("제대로 입력 부탁드립니다.");
             return;
         }
 
@@ -106,10 +108,10 @@ client.on('message', message => {
         const regex = /^![가-힣]+\s+(\d+(\.\d+)?%)\s+(\d+)번$/;
 
         if (num * 0.01 > 1) {
-            message.channel.send("아잇 싯팔 꼴받게 하지말라고");
+            message.channel.send("꼴받게 하지말라고");
             return;
         } else if (/-\w+/g.test(content)) {
-            message.channel.send("마이너스 넣지말라고");
+            message.channel.send("마이너스 넣지말아주세요");
             return;
         }
 
@@ -176,7 +178,7 @@ client.on('message', message => {
 
         if (/.*재료.*/.test(content)) {
             if (num === null || num === undefined || num - 1 < 0) {
-                message.channel.send("야발련아 똑바로 입력해!!!!");
+                message.channel.send("똑바로 입력해!!!!");
             } else {
                 if (treasureRegex[0].test(content)) {
                     treasureMaterial(num, message, 0.00020228582987761708);
@@ -215,7 +217,7 @@ client.on('message', message => {
                 message.channel.send("가모스 글로벌 한시간 기준");
                 message.channel.send("확률정보없음");
             } else {
-                message.channel.send("제대로 입력하셈;;");
+                message.channel.send("제대로 입력하셈");
             }
             return;
         } else {
@@ -232,7 +234,7 @@ client.on('message', message => {
             } else if (treasureRegex[5].test(content)) {
                 message.channel.send("확률정보없음");
             } else {
-                message.channel.send("제대로 입력하셈;;");
+                message.channel.send("제대로 입력하셈");
             }
             return;
         }
@@ -245,6 +247,7 @@ client.on('message', message => {
         const currentMinute = kstTime.getMinutes();
 
         let minDiff = Number.MAX_SAFE_INTEGER;
+        let bossMessage = "";
 
         if (content === "!보스") {
             for (const day in data.boss) {
@@ -255,25 +258,49 @@ client.on('message', message => {
                         const diff = (bossHour - currentHour) * 60 + (bossMinute - currentMinute);
                         if (diff < minDiff) {
                             minDiff = diff;
-                            message.channel.send(`현재 가장 가까운 보스는 ${bossInfo.time} 시간에 출현 하는 ${bossInfo.bossName}입니다.`);
+                            bossMessage = `현재 가장 가까운 보스는 ${bossInfo.time} 시간에 출현 하는 ${bossInfo.bossName}입니다.`;
                         }
                     }
                 }
             }
-        } else if (content === "!보스 시간표") {
-            message.channel.send(`오늘 보스 시간표입니다.`);
+        } else if (content === "!보스 시간표" || content === "!보스시간표") {
+            bossMessage = "오늘 보스 시간표입니다.";
             for (const day in data.boss) {
                 const bosses = data.boss[day];
                 if (currentDay === getDay(day)) {
                     for (const bossInfo of bosses) {
-                        message.channel.send(`
-                            \n ${bossInfo.time}에 ${bossInfo.bossName}
-                        `);
+                        bossMessage += `\n ${bossInfo.time}에 ${bossInfo.bossName}`;
                     }
                 }
             }
         }
 
+        if (bossMessage !== "") {
+            message.channel.send(bossMessage);
+        } else {
+            message.channel.send("에러에러에러");
+        }
+
+    } else if (regexArr[10].test(content)) {
+        const res = await axios.get('https://www.kr.playblackdesert.com/ko-KR/News/Detail?groupContentNo=10748&countryType=ko-KR');
+        const $ = cheerio.load(res.data);
+
+        message.channel.send("현재 사용 가능한 쿠폰(베타버전)");
+
+        const couponCodes = [];
+
+        $('.tpl_glance.glance_coupon').each((index, element) => {
+            const coupon = $(element).find(".tpl_glance.glance_coupon_code").text().trim();
+            const date = $(element).find(".tpl_shop_fold_title .fold_contents:nth-child(1)").text().trim();
+
+            couponCodes.push(coupon + " (" + date + ")");
+        });
+
+        if (couponCodes.length > 0) {
+            message.channel.send(couponCodes.join('\n'));
+        } else {
+            message.channel.send("현재 사용 가능한 쿠폰이 없습니다.");
+        }
     } else {
         message.channel.send("사용법보고 다시 입력해주세요.");
     }
@@ -359,6 +386,6 @@ function getKST() {
     return currentTime;
 }
 
-keepAlive();
+// keepAlive();
 // 봇과 서버를 연결해주는 부분
 client.login(process.env.TOKEN);
